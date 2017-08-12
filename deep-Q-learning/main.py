@@ -1,7 +1,7 @@
 import sys
 import gym
 from gym import wrappers
-from agent import agent
+from agent import Agent
 
 batch_size = 32
 episodes = sys.argv[1] if len(sys.argv) > 1 else 5000
@@ -9,9 +9,12 @@ env_name = sys.argv[2] if len(sys.argv) > 2 else "Pong-v0"
 
 env = gym.make(env_name)
 env.reset()
+agent = Agent(env.observation_space.shape[0], env.action_space.n)
+
 env = wrappers.Monitor(env, env_name, force=True)
 for i_episodes in range(episodes):
     state = env.reset()
+    state = np.reshape(state, [1, env.observation_space.shape[0]])
     while (True):
         env.render()
         action = agent.act(state)

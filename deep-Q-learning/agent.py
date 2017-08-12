@@ -1,9 +1,10 @@
-import gym
 import numpy as np
+import random
 from collections import deque
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Dropout, Flatten
 from keras.optimizers import Adam
+
 
 class Agent:
     def __init__(self, state_size, action_size):
@@ -16,13 +17,41 @@ class Agent:
         self.epsilon_decay = 0.995
         self.learning_rate = 0.001
         self.model = self._build_model()
+        self.weight_backup = 'model_weights.h5'
 
     def _build_model(self):
         model = Sequential()
-        model.add(Conv2D(32, kernel_size=8, subsample=(4, 4), activation='relu', padding='same', input_shape=(img_rows,img_cols,img_channels)))  #80*80*4
+        model.add(Conv2D(32, kernel_size=8, subsample=(4, 4), activation='relu', padding='same', input_shape=self.state_size))  #80*80*4
         model.add(Conv2D(64, kernel_size=4, subsample=(2, 2), activation='relu', padding='same'))
         model.add(Conv2D(64, kernel_size=3, subsample=(1, 1), activation='relu', padding='same'))
         model.add(Flatten())
         model.add(Dense(512, activation='relu'))
         model.add(Dense(2, activation='linear'))
-        model.summary()
+        model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
+        return model
+
+    def save_model(self):
+            self.model.save(self.weight_backup)
+
+    def act(self, state):
+        if np.random.rand() <= self.exploration_rate:
+            return random.randrange(self.action_size)
+        act_values = self.model.predict(state)
+        return np.argmax(act_values[0])
+
+    def remember(self, state, action, reward, new_state, done):
+        self.memory.append((state, action, reward, new_state, done))
+
+    def memory_replay(self, batch_size):
+        if len(self.memory) < batch_size:
+            return
+            sample = random.sample(self.memory, batch_size)
+        for state, action, reward, new_state, done in sample:
+            target = reward
+            if not done:
+                target = reward + self.gamma * np.amax(self.model.predict(new_state)[0])
+                target_f = self.model.predict(state)
+                target_f[0][action] = target
+                self.model.fit(state, target_f, epochs=1, verbose=0)
+        if self.exploration_rate > self.exploration_min:
+            self.exploration_rate *= self.exploration_decay
