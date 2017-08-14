@@ -7,9 +7,8 @@ import numpy as np
 batch_size = 32
 episodes = sys.argv[1] if len(sys.argv) > 1 else 2000
 episodes = int(episodes)
-#env_name = sys.argv[2] if len(sys.argv) > 2 else "Pong-v0"
+env_name = sys.argv[2] if len(sys.argv) > 2 else "Pong-v0"
 
-env_name = "CartPole-v0"
 
 env = gym.make(env_name)
 
