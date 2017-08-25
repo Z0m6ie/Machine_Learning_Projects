@@ -44,4 +44,4 @@ for i_episodes in range(episodes):
 
 env.close()
 text_file.close()
-# gym.upload(env_name, api_key='sk_WRCITkqmTJKYB9hvBk5tPA')
+gym.upload(env_name, api_key='sk_WRCITkqmTJKYB9hvBk5tPA')

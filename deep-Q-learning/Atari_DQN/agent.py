@@ -16,7 +16,7 @@ class Agent:
         self.gamma = 0.99   # discount rate
         self.epsilon = 1.0  # exploration rate
         self.epsilon_min = 0.005  # exploration will not decay futher
-        self.epsilon_decay = 0.000015
+        self.epsilon_decay = 0.0000398
         self.learning_rate = 0.0001
         self.loss = 0
         self.model = self._build_model()
