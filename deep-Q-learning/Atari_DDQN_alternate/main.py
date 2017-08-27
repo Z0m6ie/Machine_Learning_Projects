@@ -27,8 +27,8 @@ for i_episodes in range(episodes):
     totalreward = 0
     done = False
     while not done:
-        #if i_episodes % 50 == 0:
-            #env.render()
+        if i_episodes % 50 == 0:
+            env.render()
         action = agent.act(state)
         new_state, reward, done, info = env.step(action)
         new_state = agent.RGBprocess(new_state)

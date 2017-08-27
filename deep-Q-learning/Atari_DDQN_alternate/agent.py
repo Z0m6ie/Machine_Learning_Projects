@@ -15,9 +15,9 @@ class Agent:
         self.memory = deque(maxlen=400000)
         self.gamma = 0.99   # discount rate
         self.epsilon = 1.0  # exploration rate
-        self.epsilon_min = 0.005  # exploration will not decay futher
-        self.epsilon_decay = 0.0000398
-        self.learning_rate = 0.0001
+        self.epsilon_min = 0.01  # exploration will not decay futher
+        self.epsilon_decay = 0.00033
+        self.learning_rate = 0.001
         self.loss = 0
         self.model = self._build_model()
         self.target_model = self._build_model()
